@@ -1,0 +1,2051 @@
+
+<h2 class="sr-only">Java Lab Exam Study Guide — 100 programs across 5 sections</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.wrap{padding:1rem 0}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.5rem}
+.tab{padding:7px 14px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-size:13px;cursor:pointer;background:var(--color-background-primary);color:var(--color-text-secondary);transition:all .15s}
+.tab.active{background:var(--color-background-tertiary);color:var(--color-text-primary);border-color:var(--color-border-primary);font-weight:500}
+.tab:hover:not(.active){background:var(--color-background-secondary)}
+.section{display:none}
+.section.active{display:block}
+.section-header{margin-bottom:1.25rem}
+.section-header h2{font-size:18px;font-weight:500;color:var(--color-text-primary)}
+.section-header p{font-size:13px;color:var(--color-text-secondary);margin-top:4px}
+.prog-list{display:flex;flex-direction:column;gap:10px}
+.prog{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.prog-header{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;background:var(--color-background-primary);user-select:none}
+.prog-header:hover{background:var(--color-background-secondary)}
+.prog-num{font-size:11px;font-weight:500;padding:2px 7px;border-radius:20px;min-width:28px;text-align:center}
+.prog-title{font-size:14px;font-weight:500;color:var(--color-text-primary);flex:1}
+.prog-chevron{font-size:14px;color:var(--color-text-secondary);transition:transform .2s}
+.prog-chevron.open{transform:rotate(180deg)}
+.prog-body{display:none;border-top:0.5px solid var(--color-border-tertiary)}
+.prog-body.open{display:block}
+pre{background:var(--color-background-tertiary);padding:14px;font-family:var(--font-mono);font-size:12px;line-height:1.6;overflow-x:auto;color:var(--color-text-primary);white-space:pre}
+.copy-btn{margin:10px 14px 12px;padding:5px 12px;font-size:12px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-secondary);cursor:pointer}
+.copy-btn:hover{background:var(--color-background-secondary)}
+.badge-swing{background:#E6F1FB;color:#0C447C}
+.badge-jdbc{background:#EAF3DE;color:#27500A}
+.badge-swjdbc{background:#EEEDFE;color:#3C3489}
+.badge-applet{background:#FAECE7;color:#712B13}
+.badge-iface{background:#E1F5EE;color:#085041}
+.badge-abs{background:#FAEEDA;color:#633806}
+.search-row{display:flex;gap:8px;margin-bottom:1rem}
+.search-row input{flex:1;padding:7px 12px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-size:13px;background:var(--color-background-primary);color:var(--color-text-primary)}
+.count{font-size:12px;color:var(--color-text-secondary);padding:7px 0}
+</style>
+
+<div class="wrap">
+<div class="tabs" id="tabs">
+  <button class="tab active" onclick="showTab('swing')">☕ Swing (20)</button>
+  <button class="tab" onclick="showTab('jdbc')">🗄️ JDBC (20)</button>
+  <button class="tab" onclick="showTab('swjdbc')">🔗 Swing+JDBC (20)</button>
+  <button class="tab" onclick="showTab('applet')">🌐 Applet (20)</button>
+  <button class="tab" onclick="showTab('iface')">📐 Interface (20)</button>
+  <button class="tab" onclick="showTab('abs')">🧱 Abstract (20)</button>
+</div>
+
+<div class="search-row">
+  <input type="text" id="searchBox" placeholder="Search programs..." oninput="filterProgs()">
+</div>
+<div class="count" id="countLbl"></div>
+
+<div id="sections">
+
+<!-- ===== SWING ===== -->
+<div class="section active" id="sec-swing">
+<div class="section-header"><h2>Swing Programs</h2><p>GUI applications using javax.swing — frames, buttons, layouts, events</p></div>
+<div class="prog-list" id="list-swing"></div>
+</div>
+
+<!-- ===== JDBC ===== -->
+<div class="section" id="sec-jdbc">
+<div class="section-header"><h2>JDBC Programs</h2><p>Database connectivity using java.sql — connect, CRUD, PreparedStatement, ResultSet</p></div>
+<div class="prog-list" id="list-jdbc"></div>
+</div>
+
+<!-- ===== SWING+JDBC ===== -->
+<div class="section" id="sec-swjdbc">
+<div class="section-header"><h2>Swing + JDBC Programs</h2><p>GUI forms connected to a database — full CRUD applications</p></div>
+<div class="prog-list" id="list-swjdbc"></div>
+</div>
+
+<!-- ===== APPLET ===== -->
+<div class="section" id="sec-applet">
+<div class="section-header"><h2>Applet Programs</h2><p>Java Applets using java.applet.Applet and AWT — drawing, events, animation</p></div>
+<div class="prog-list" id="list-applet"></div>
+</div>
+
+<!-- ===== INTERFACE ===== -->
+<div class="section" id="sec-iface">
+<div class="section-header"><h2>Interface Programs</h2><p>Java Interfaces — implementing, multiple inheritance, default methods, functional interfaces</p></div>
+<div class="prog-list" id="list-iface"></div>
+</div>
+
+<!-- ===== ABSTRACT ===== -->
+<div class="section" id="sec-abs">
+<div class="section-header"><h2>Abstract Class Programs</h2><p>Abstract classes — templates, method overriding, polymorphism, design patterns</p></div>
+<div class="prog-list" id="list-abs"></div>
+</div>
+
+</div>
+</div>
+
+<script>
+const DATA = {
+swing:[
+{t:"Basic JFrame Window",c:`import javax.swing.*;
+public class BasicFrame {
+    public static void main(String[] args) {
+        JFrame f = new JFrame("Hello Swing");
+        f.setSize(400, 300);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setVisible(true);
+    }
+}`},
+{t:"JButton Click Event",c:`import javax.swing.*;
+import java.awt.event.*;
+public class ButtonClick {
+    public static void main(String[] args) {
+        JFrame f = new JFrame("Button Demo");
+        JButton btn = new JButton("Click Me");
+        JLabel lbl = new JLabel("Waiting...");
+        btn.addActionListener(e -> lbl.setText("Button Clicked!"));
+        f.setLayout(new java.awt.FlowLayout());
+        f.add(btn); f.add(lbl);
+        f.setSize(300,150); f.setVisible(true);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+}`},
+{t:"JTextField & JLabel Input",c:`import javax.swing.*;
+import java.awt.*;
+public class TextInput {
+    public static void main(String[] args) {
+        JFrame f = new JFrame("Text Input");
+        JTextField tf = new JTextField(15);
+        JLabel lbl = new JLabel("Output: ");
+        JButton btn = new JButton("Show");
+        btn.addActionListener(e -> lbl.setText("You typed: " + tf.getText()));
+        f.setLayout(new FlowLayout());
+        f.add(tf); f.add(btn); f.add(lbl);
+        f.setSize(350,120); f.setVisible(true);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+}`},
+{t:"Simple Calculator",c:`import javax.swing.*;
+import java.awt.*;
+public class Calculator {
+    public static void main(String[] args) {
+        JFrame f = new JFrame("Calculator");
+        JTextField t1=new JTextField(5), t2=new JTextField(5);
+        JLabel res=new JLabel("Result: ");
+        JButton add=new JButton("+"), sub=new JButton("-"),
+                mul=new JButton("*"), div=new JButton("/");
+        add.addActionListener(e->res.setText("Result: "+(Double.parseDouble(t1.getText())+Double.parseDouble(t2.getText()))));
+        sub.addActionListener(e->res.setText("Result: "+(Double.parseDouble(t1.getText())-Double.parseDouble(t2.getText()))));
+        mul.addActionListener(e->res.setText("Result: "+(Double.parseDouble(t1.getText())*Double.parseDouble(t2.getText()))));
+        div.addActionListener(e->res.setText("Result: "+(Double.parseDouble(t1.getText())/Double.parseDouble(t2.getText()))));
+        f.setLayout(new FlowLayout());
+        f.add(t1); f.add(t2); f.add(add); f.add(sub); f.add(mul); f.add(div); f.add(res);
+        f.setSize(400,120); f.setVisible(true);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+}`},
+{t:"JCheckBox Demo",c:`import javax.swing.*;
+import java.awt.*;
+public class CheckBoxDemo {
+    public static void main(String[] args) {
+        JFrame f = new JFrame("CheckBox");
+        JCheckBox cb1=new JCheckBox("Java"), cb2=new JCheckBox("Python");
+        JLabel lbl=new JLabel("Select languages");
+        JButton btn=new JButton("Show");
+        btn.addActionListener(e->{
+            String s="";
+            if(cb1.isSelected()) s+="Java ";
+            if(cb2.isSelected()) s+="Python";
+            lbl.setText("Selected: "+s);
+        });
+        f.setLayout(new FlowLayout());
+        f.add(cb1); f.add(cb2); f.add(btn); f.add(lbl);
+        f.setSize(300,130); f.setVisible(true);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+}`},
+{t:"JRadioButton Demo",c:`import javax.swing.*;
+import java.awt.*;
+public class RadioDemo {
+    public static void main(String[] args) {
+        JFrame f = new JFrame("Radio");
+        JRadioButton m=new JRadioButton("Male"), fe=new JRadioButton("Female");
+        ButtonGroup bg=new ButtonGroup();
+        bg.add(m); bg.add(fe);
+        JLabel lbl=new JLabel("Choose gender");
+        JButton btn=new JButton("OK");
+        btn.addActionListener(e->lbl.setText(m.isSelected()?"Male":"Female"));
+        f.setLayout(new FlowLayout());
+        f.add(m); f.add(fe); f.add(btn); f.add(lbl);
+        f.setSize(300,120); f.setVisible(true);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+}`},
+{t:"JComboBox (Dropdown)",c:`import javax.swing.*;
+import java.awt.*;
+public class ComboDemo {
+    public static void main(String[] args) {
+        JFrame f = new JFrame("ComboBox");
+        String[] items={"Red","Green","Blue"};
+        JComboBox<String> cb=new JComboBox<>(items);
+        JLabel lbl=new JLabel("Pick a color");
+        JButton btn=new JButton("Select");
+        btn.addActionListener(e->lbl.setText("Color: "+cb.getSelectedItem()));
+        f.setLayout(new FlowLayout());
+        f.add(cb); f.add(btn); f.add(lbl);
+        f.setSize(300,120); f.setVisible(true);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+}`},
+{t:"JList with Scrollpane",c:`import javax.swing.*;
+import java.awt.*;
+public class ListDemo {
+    public static void main(String[] args) {
+        JFrame f = new JFrame("JList");
+        String[] fruits={"Apple","Banana","Cherry","Date","Elderberry"};
+        JList<String> list=new JList<>(fruits);
+        JLabel lbl=new JLabel("Select fruit");
+        JButton btn=new JButton("Pick");
+        btn.addActionListener(e->lbl.setText("Picked: "+list.getSelectedValue()));
+        f.setLayout(new BorderLayout());
+        f.add(new JScrollPane(list),BorderLayout.CENTER);
+        f.add(btn,BorderLayout.SOUTH);
+        f.add(lbl,BorderLayout.NORTH);
+        f.setSize(250,200); f.setVisible(true);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+}`},
+{t:"JMenu & MenuBar",c:`import javax.swing.*;
+public class MenuDemo {
+    public static void main(String[] args) {
+        JFrame f = new JFrame("Menu");
+        JMenuBar mb=new JMenuBar();
+        JMenu file=new JMenu("File");
+        JMenuItem open=new JMenuItem("Open");
+        JMenuItem exit=new JMenuItem("Exit");
+        exit.addActionListener(e->System.exit(0));
+        file.add(open); file.add(exit);
+        mb.add(file);
+        f.setJMenuBar(mb);
+        f.setSize(400,300); f.setVisible(true);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+}`},
+{t:"JTable Display",c:`import javax.swing.*;
+public class TableDemo {
+    public static void main(String[] args) {
+        JFrame f = new JFrame("JTable");
+        String[] cols={"ID","Name","Marks"};
+        Object[][] rows={{"1","Alice","90"},{"2","Bob","85"},{"3","Carol","78"}};
+        JTable table=new JTable(rows,cols);
+        f.add(new JScrollPane(table));
+        f.setSize(400,200); f.setVisible(true);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+}`},
+{t:"GridLayout Form",c:`import javax.swing.*;
+import java.awt.*;
+public class GridForm {
+    public static void main(String[] args) {
+        JFrame f = new JFrame("Registration");
+        f.setLayout(new GridLayout(3,2,5,5));
+        f.add(new JLabel("Name:")); f.add(new JTextField());
+        f.add(new JLabel("Email:")); f.add(new JTextField());
+        f.add(new JLabel("Age:")); f.add(new JTextField());
+        f.setSize(300,150); f.setVisible(true);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+}`},
+{t:"BorderLayout Demo",c:`import javax.swing.*;
+import java.awt.*;
+public class BorderDemo {
+    public static void main(String[] args) {
+        JFrame f = new JFrame("BorderLayout");
+        f.setLayout(new BorderLayout());
+        f.add(new JButton("North"),BorderLayout.NORTH);
+        f.add(new JButton("South"),BorderLayout.SOUTH);
+        f.add(new JButton("East"),BorderLayout.EAST);
+        f.add(new JButton("West"),BorderLayout.WEST);
+        f.add(new JButton("Center"),BorderLayout.CENTER);
+        f.setSize(350,250); f.setVisible(true);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+}`},
+{t:"JDialog Box",c:`import javax.swing.*;
+public class DialogDemo {
+    public static void main(String[] args) {
+        JFrame f = new JFrame("Dialog Demo");
+        JButton btn = new JButton("Open Dialog");
+        btn.addActionListener(e -> {
+            JDialog d = new JDialog(f,"Info",true);
+            d.add(new JLabel("  This is a dialog box!  "));
+            d.setSize(250,100);
+            d.setLocationRelativeTo(f);
+            d.setVisible(true);
+        });
+        f.add(btn);
+        f.setSize(300,150); f.setVisible(true);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+}`},
+{t:"JSlider Demo",c:`import javax.swing.*;
+import java.awt.*;
+public class SliderDemo {
+    public static void main(String[] args) {
+        JFrame f = new JFrame("Slider");
+        JSlider s = new JSlider(0,100,50);
+        JLabel lbl = new JLabel("Value: 50");
+        s.addChangeListener(e -> lbl.setText("Value: "+s.getValue()));
+        f.setLayout(new FlowLayout());
+        f.add(s); f.add(lbl);
+        f.setSize(350,120); f.setVisible(true);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+}`},
+{t:"JProgressBar Demo",c:`import javax.swing.*;
+import java.awt.*;
+public class ProgressDemo {
+    public static void main(String[] args) throws Exception {
+        JFrame f = new JFrame("Progress");
+        JProgressBar pb = new JProgressBar(0,100);
+        pb.setStringPainted(true);
+        f.add(pb,BorderLayout.CENTER);
+        f.setSize(350,100); f.setVisible(true);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        for(int i=0;i<=100;i++){
+            pb.setValue(i); Thread.sleep(40);
+        }
+    }
+}`},
+{t:"JTextArea with Scroll",c:`import javax.swing.*;
+import java.awt.*;
+public class TextAreaDemo {
+    public static void main(String[] args) {
+        JFrame f = new JFrame("TextArea");
+        JTextArea ta = new JTextArea(8,30);
+        JButton clr = new JButton("Clear");
+        clr.addActionListener(e->ta.setText(""));
+        f.setLayout(new BorderLayout());
+        f.add(new JScrollPane(ta),BorderLayout.CENTER);
+        f.add(clr,BorderLayout.SOUTH);
+        f.setSize(400,250); f.setVisible(true);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+}`},
+{t:"JPasswordField Login",c:`import javax.swing.*;
+import java.awt.*;
+public class LoginForm {
+    public static void main(String[] args) {
+        JFrame f = new JFrame("Login");
+        f.setLayout(new GridLayout(3,2,5,5));
+        JTextField user=new JTextField();
+        JPasswordField pass=new JPasswordField();
+        JButton btn=new JButton("Login");
+        JLabel msg=new JLabel("");
+        btn.addActionListener(e->{
+            if(user.getText().equals("admin")&&new String(pass.getPassword()).equals("1234"))
+                msg.setText("Welcome!");
+            else msg.setText("Invalid!");
+        });
+        f.add(new JLabel("User:")); f.add(user);
+        f.add(new JLabel("Pass:")); f.add(pass);
+        f.add(btn); f.add(msg);
+        f.setSize(300,130); f.setVisible(true);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+}`},
+{t:"JTabbedPane Demo",c:`import javax.swing.*;
+public class TabbedDemo {
+    public static void main(String[] args) {
+        JFrame f = new JFrame("Tabs");
+        JTabbedPane tp = new JTabbedPane();
+        tp.add("Home", new JLabel("  Home content"));
+        tp.add("About", new JLabel("  About content"));
+        tp.add("Contact", new JLabel("  Contact content"));
+        f.add(tp);
+        f.setSize(400,250); f.setVisible(true);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+}`},
+{t:"Mouse Event Listener",c:`import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+public class MouseDemo extends JPanel implements MouseListener {
+    String msg="Click anywhere";
+    public MouseDemo(){ addMouseListener(this); }
+    public void paintComponent(Graphics g){ super.paintComponent(g); g.drawString(msg,100,100); }
+    public void mouseClicked(MouseEvent e){ msg="Clicked at ("+e.getX()+","+e.getY()+")"; repaint(); }
+    public void mouseEntered(MouseEvent e){} public void mouseExited(MouseEvent e){}
+    public void mousePressed(MouseEvent e){} public void mouseReleased(MouseEvent e){}
+    public static void main(String[] args) {
+        JFrame f=new JFrame("Mouse"); f.add(new MouseDemo());
+        f.setSize(350,200); f.setVisible(true); f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+}`},
+{t:"KeyEvent Listener",c:`import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+public class KeyDemo extends JFrame implements KeyListener {
+    JLabel lbl=new JLabel("Press a key");
+    public KeyDemo(){
+        add(lbl); addKeyListener(this);
+        setSize(300,120); setVisible(true); setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setFocusable(true);
+    }
+    public void keyTyped(KeyEvent e){ lbl.setText("Typed: "+e.getKeyChar()); }
+    public void keyPressed(KeyEvent e){}
+    public void keyReleased(KeyEvent e){}
+    public static void main(String[] a){ new KeyDemo(); }
+}`}
+],
+jdbc:[
+{t:"Connect to MySQL Database",c:`import java.sql.*;
+public class ConnectDB {
+    public static void main(String[] args) throws Exception {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        Connection con = DriverManager.getConnection(
+            "jdbc:mysql://localhost:3306/testdb","root","password");
+        System.out.println("Connected: " + con);
+        con.close();
+    }
+}`},
+{t:"Create Table",c:`import java.sql.*;
+public class CreateTable {
+    public static void main(String[] args) throws Exception {
+        Connection con = DriverManager.getConnection(
+            "jdbc:mysql://localhost:3306/testdb","root","password");
+        Statement st = con.createStatement();
+        st.execute("CREATE TABLE IF NOT EXISTS students "+
+            "(id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(50), marks INT)");
+        System.out.println("Table created.");
+        con.close();
+    }
+}`},
+{t:"Insert a Record",c:`import java.sql.*;
+public class InsertRecord {
+    public static void main(String[] args) throws Exception {
+        Connection con = DriverManager.getConnection(
+            "jdbc:mysql://localhost:3306/testdb","root","password");
+        Statement st = con.createStatement();
+        int rows = st.executeUpdate(
+            "INSERT INTO students(name,marks) VALUES('Alice',90)");
+        System.out.println(rows + " row inserted.");
+        con.close();
+    }
+}`},
+{t:"Retrieve All Records",c:`import java.sql.*;
+public class SelectAll {
+    public static void main(String[] args) throws Exception {
+        Connection con = DriverManager.getConnection(
+            "jdbc:mysql://localhost:3306/testdb","root","password");
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM students");
+        while(rs.next())
+            System.out.println(rs.getInt("id")+" "+rs.getString("name")+" "+rs.getInt("marks"));
+        con.close();
+    }
+}`},
+{t:"Update a Record",c:`import java.sql.*;
+public class UpdateRecord {
+    public static void main(String[] args) throws Exception {
+        Connection con = DriverManager.getConnection(
+            "jdbc:mysql://localhost:3306/testdb","root","password");
+        Statement st = con.createStatement();
+        int r = st.executeUpdate("UPDATE students SET marks=95 WHERE name='Alice'");
+        System.out.println(r+" row updated.");
+        con.close();
+    }
+}`},
+{t:"Delete a Record",c:`import java.sql.*;
+public class DeleteRecord {
+    public static void main(String[] args) throws Exception {
+        Connection con = DriverManager.getConnection(
+            "jdbc:mysql://localhost:3306/testdb","root","password");
+        Statement st = con.createStatement();
+        int r = st.executeUpdate("DELETE FROM students WHERE name='Alice'");
+        System.out.println(r+" row deleted.");
+        con.close();
+    }
+}`},
+{t:"PreparedStatement Insert",c:`import java.sql.*;
+public class PreparedInsert {
+    public static void main(String[] args) throws Exception {
+        Connection con = DriverManager.getConnection(
+            "jdbc:mysql://localhost:3306/testdb","root","password");
+        PreparedStatement ps = con.prepareStatement(
+            "INSERT INTO students(name,marks) VALUES(?,?)");
+        ps.setString(1,"Bob");
+        ps.setInt(2,88);
+        ps.executeUpdate();
+        System.out.println("Inserted with PreparedStatement.");
+        con.close();
+    }
+}`},
+{t:"PreparedStatement Select",c:`import java.sql.*;
+public class PreparedSelect {
+    public static void main(String[] args) throws Exception {
+        Connection con = DriverManager.getConnection(
+            "jdbc:mysql://localhost:3306/testdb","root","password");
+        PreparedStatement ps = con.prepareStatement(
+            "SELECT * FROM students WHERE marks > ?");
+        ps.setInt(1,80);
+        ResultSet rs = ps.executeQuery();
+        while(rs.next())
+            System.out.println(rs.getString("name")+" - "+rs.getInt("marks"));
+        con.close();
+    }
+}`},
+{t:"ResultSet Metadata",c:`import java.sql.*;
+public class RSMetaDemo {
+    public static void main(String[] args) throws Exception {
+        Connection con = DriverManager.getConnection(
+            "jdbc:mysql://localhost:3306/testdb","root","password");
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM students");
+        ResultSetMetaData md = rs.getMetaData();
+        int cols = md.getColumnCount();
+        for(int i=1;i<=cols;i++)
+            System.out.print(md.getColumnName(i)+"  ");
+        System.out.println();
+        con.close();
+    }
+}`},
+{t:"Transaction with Rollback",c:`import java.sql.*;
+public class TransactionDemo {
+    public static void main(String[] args) throws Exception {
+        Connection con = DriverManager.getConnection(
+            "jdbc:mysql://localhost:3306/testdb","root","password");
+        con.setAutoCommit(false);
+        try {
+            Statement st = con.createStatement();
+            st.executeUpdate("INSERT INTO students(name,marks) VALUES('Carol',70)");
+            st.executeUpdate("INSERT INTO students(name,marks) VALUES('Dave',75)");
+            con.commit();
+            System.out.println("Transaction committed.");
+        } catch(Exception e) {
+            con.rollback();
+            System.out.println("Rolled back: "+e.getMessage());
+        }
+        con.close();
+    }
+}`},
+{t:"Batch Insert",c:`import java.sql.*;
+public class BatchInsert {
+    public static void main(String[] args) throws Exception {
+        Connection con = DriverManager.getConnection(
+            "jdbc:mysql://localhost:3306/testdb","root","password");
+        PreparedStatement ps = con.prepareStatement(
+            "INSERT INTO students(name,marks) VALUES(?,?)");
+        String[][] data={{"Eve","91"},{"Frank","84"},{"Grace","79"}};
+        for(String[] d:data){
+            ps.setString(1,d[0]); ps.setInt(2,Integer.parseInt(d[1]));
+            ps.addBatch();
+        }
+        int[] res = ps.executeBatch();
+        System.out.println(res.length+" rows inserted.");
+        con.close();
+    }
+}`},
+{t:"CallableStatement (Stored Proc)",c:`import java.sql.*;
+// Assume stored proc: CREATE PROCEDURE getStudent(IN sid INT) SELECT * FROM students WHERE id=sid;
+public class CallableDemo {
+    public static void main(String[] args) throws Exception {
+        Connection con = DriverManager.getConnection(
+            "jdbc:mysql://localhost:3306/testdb","root","password");
+        CallableStatement cs = con.prepareCall("{CALL getStudent(?)}");
+        cs.setInt(1,1);
+        ResultSet rs = cs.executeQuery();
+        while(rs.next())
+            System.out.println(rs.getString("name")+" "+rs.getInt("marks"));
+        con.close();
+    }
+}`},
+{t:"DatabaseMetaData",c:`import java.sql.*;
+public class DBMetaDemo {
+    public static void main(String[] args) throws Exception {
+        Connection con = DriverManager.getConnection(
+            "jdbc:mysql://localhost:3306/testdb","root","password");
+        DatabaseMetaData dm = con.getMetaData();
+        System.out.println("DB: "+dm.getDatabaseProductName());
+        System.out.println("Driver: "+dm.getDriverName());
+        System.out.println("URL: "+dm.getURL());
+        con.close();
+    }
+}`},
+{t:"Count Rows",c:`import java.sql.*;
+public class CountRows {
+    public static void main(String[] args) throws Exception {
+        Connection con = DriverManager.getConnection(
+            "jdbc:mysql://localhost:3306/testdb","root","password");
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT COUNT(*) AS total FROM students");
+        if(rs.next()) System.out.println("Total students: "+rs.getInt("total"));
+        con.close();
+    }
+}`},
+{t:"Search Record by Name",c:`import java.sql.*;
+import java.util.Scanner;
+public class SearchByName {
+    public static void main(String[] args) throws Exception {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter name: ");
+        String name = sc.nextLine();
+        Connection con = DriverManager.getConnection(
+            "jdbc:mysql://localhost:3306/testdb","root","password");
+        PreparedStatement ps = con.prepareStatement(
+            "SELECT * FROM students WHERE name=?");
+        ps.setString(1,name);
+        ResultSet rs = ps.executeQuery();
+        while(rs.next())
+            System.out.println(rs.getInt("id")+" "+rs.getString("name")+" "+rs.getInt("marks"));
+        con.close();
+    }
+}`},
+{t:"Drop Table",c:`import java.sql.*;
+public class DropTable {
+    public static void main(String[] args) throws Exception {
+        Connection con = DriverManager.getConnection(
+            "jdbc:mysql://localhost:3306/testdb","root","password");
+        Statement st = con.createStatement();
+        st.execute("DROP TABLE IF EXISTS students");
+        System.out.println("Table dropped.");
+        con.close();
+    }
+}`},
+{t:"Max & Min Marks",c:`import java.sql.*;
+public class MaxMin {
+    public static void main(String[] args) throws Exception {
+        Connection con = DriverManager.getConnection(
+            "jdbc:mysql://localhost:3306/testdb","root","password");
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT MAX(marks) max, MIN(marks) min FROM students");
+        if(rs.next()) System.out.println("Max: "+rs.getInt("max")+" Min: "+rs.getInt("min"));
+        con.close();
+    }
+}`},
+{t:"Sort Records",c:`import java.sql.*;
+public class SortRecords {
+    public static void main(String[] args) throws Exception {
+        Connection con = DriverManager.getConnection(
+            "jdbc:mysql://localhost:3306/testdb","root","password");
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM students ORDER BY marks DESC");
+        while(rs.next())
+            System.out.println(rs.getString("name")+" : "+rs.getInt("marks"));
+        con.close();
+    }
+}`},
+{t:"Updatable ResultSet",c:`import java.sql.*;
+public class UpdatableRS {
+    public static void main(String[] args) throws Exception {
+        Connection con = DriverManager.getConnection(
+            "jdbc:mysql://localhost:3306/testdb","root","password");
+        Statement st = con.createStatement(
+            ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        ResultSet rs = st.executeQuery("SELECT * FROM students WHERE name='Bob'");
+        if(rs.next()){
+            rs.updateInt("marks",99);
+            rs.updateRow();
+            System.out.println("Updated via ResultSet.");
+        }
+        con.close();
+    }
+}`},
+{t:"Display in Formatted Table",c:`import java.sql.*;
+public class FormattedTable {
+    public static void main(String[] args) throws Exception {
+        Connection con = DriverManager.getConnection(
+            "jdbc:mysql://localhost:3306/testdb","root","password");
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM students");
+        System.out.printf("%-5s %-15s %-5s%n","ID","Name","Marks");
+        System.out.println("-".repeat(27));
+        while(rs.next())
+            System.out.printf("%-5d %-15s %-5d%n",
+                rs.getInt("id"),rs.getString("name"),rs.getInt("marks"));
+        con.close();
+    }
+}`}
+],
+swjdbc:[
+{t:"Student Registration Form + DB Insert",c:`import javax.swing.*; import java.awt.*; import java.sql.*;
+public class StudentReg {
+    public static void main(String[] args) {
+        JFrame f=new JFrame("Student Registration");
+        f.setLayout(new GridLayout(3,2,5,5));
+        JTextField name=new JTextField(), marks=new JTextField();
+        JButton btn=new JButton("Register");
+        JLabel msg=new JLabel("");
+        btn.addActionListener(e->{
+            try{
+                Connection con=DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/testdb","root","password");
+                PreparedStatement ps=con.prepareStatement(
+                    "INSERT INTO students(name,marks) VALUES(?,?)");
+                ps.setString(1,name.getText());
+                ps.setInt(2,Integer.parseInt(marks.getText()));
+                ps.executeUpdate(); con.close();
+                msg.setText("Registered!"); name.setText(""); marks.setText("");
+            }catch(Exception ex){ msg.setText("Error: "+ex.getMessage()); }
+        });
+        f.add(new JLabel("Name:")); f.add(name);
+        f.add(new JLabel("Marks:")); f.add(marks);
+        f.add(btn); f.add(msg);
+        f.setSize(350,150); f.setVisible(true);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+}`},
+{t:"Display All Records in JTable",c:`import javax.swing.*; import java.sql.*;
+import javax.swing.table.DefaultTableModel;
+public class ShowRecords {
+    public static void main(String[] args) throws Exception {
+        JFrame f=new JFrame("Students");
+        DefaultTableModel model=new DefaultTableModel(
+            new String[]{"ID","Name","Marks"},0);
+        Connection con=DriverManager.getConnection(
+            "jdbc:mysql://localhost:3306/testdb","root","password");
+        ResultSet rs=con.createStatement().executeQuery("SELECT * FROM students");
+        while(rs.next())
+            model.addRow(new Object[]{rs.getInt(1),rs.getString(2),rs.getInt(3)});
+        con.close();
+        f.add(new JScrollPane(new JTable(model)));
+        f.setSize(400,250); f.setVisible(true);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+}`},
+{t:"Search Student by Name",c:`import javax.swing.*; import java.awt.*; import java.sql.*;
+public class SearchStudent {
+    public static void main(String[] args) {
+        JFrame f=new JFrame("Search");
+        JTextField tf=new JTextField(15);
+        JTextArea ta=new JTextArea(5,25); ta.setEditable(false);
+        JButton btn=new JButton("Search");
+        btn.addActionListener(e->{
+            try{
+                Connection con=DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/testdb","root","password");
+                PreparedStatement ps=con.prepareStatement(
+                    "SELECT * FROM students WHERE name LIKE ?");
+                ps.setString(1,"%"+tf.getText()+"%");
+                ResultSet rs=ps.executeQuery();
+                ta.setText("");
+                while(rs.next())
+                    ta.append(rs.getInt(1)+" | "+rs.getString(2)+" | "+rs.getInt(3)+"\n");
+                con.close();
+            }catch(Exception ex){ ta.setText(ex.getMessage()); }
+        });
+        f.setLayout(new FlowLayout());
+        f.add(tf); f.add(btn); f.add(new JScrollPane(ta));
+        f.setSize(400,250); f.setVisible(true);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+}`},
+{t:"Update Marks by ID",c:`import javax.swing.*; import java.awt.*; import java.sql.*;
+public class UpdateMarks {
+    public static void main(String[] args) {
+        JFrame f=new JFrame("Update Marks");
+        JTextField id=new JTextField(5), marks=new JTextField(5);
+        JButton btn=new JButton("Update"); JLabel msg=new JLabel("");
+        btn.addActionListener(e->{
+            try{
+                Connection con=DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/testdb","root","password");
+                PreparedStatement ps=con.prepareStatement(
+                    "UPDATE students SET marks=? WHERE id=?");
+                ps.setInt(1,Integer.parseInt(marks.getText()));
+                ps.setInt(2,Integer.parseInt(id.getText()));
+                int r=ps.executeUpdate(); con.close();
+                msg.setText(r>0?"Updated!":"Not found");
+            }catch(Exception ex){ msg.setText(ex.getMessage()); }
+        });
+        f.setLayout(new FlowLayout());
+        f.add(new JLabel("ID:")); f.add(id);
+        f.add(new JLabel("Marks:")); f.add(marks);
+        f.add(btn); f.add(msg);
+        f.setSize(380,100); f.setVisible(true);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+}`},
+{t:"Delete Record by ID",c:`import javax.swing.*; import java.awt.*; import java.sql.*;
+public class DeleteStudent {
+    public static void main(String[] args) {
+        JFrame f=new JFrame("Delete Student");
+        JTextField id=new JTextField(5);
+        JButton btn=new JButton("Delete"); JLabel msg=new JLabel("");
+        btn.addActionListener(e->{
+            try{
+                Connection con=DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/testdb","root","password");
+                PreparedStatement ps=con.prepareStatement(
+                    "DELETE FROM students WHERE id=?");
+                ps.setInt(1,Integer.parseInt(id.getText()));
+                int r=ps.executeUpdate(); con.close();
+                msg.setText(r>0?"Deleted!":"Not found");
+            }catch(Exception ex){ msg.setText(ex.getMessage()); }
+        });
+        f.setLayout(new FlowLayout());
+        f.add(new JLabel("Student ID:")); f.add(id);
+        f.add(btn); f.add(msg);
+        f.setSize(350,100); f.setVisible(true);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+}`},
+{t:"Login Form with DB Auth",c:`import javax.swing.*; import java.awt.*; import java.sql.*;
+public class DBLogin {
+    public static void main(String[] args) {
+        JFrame f=new JFrame("Login");
+        f.setLayout(new GridLayout(3,2,5,5));
+        JTextField user=new JTextField();
+        JPasswordField pass=new JPasswordField();
+        JButton btn=new JButton("Login"); JLabel msg=new JLabel("");
+        btn.addActionListener(e->{
+            try{
+                Connection con=DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/testdb","root","password");
+                PreparedStatement ps=con.prepareStatement(
+                    "SELECT * FROM users WHERE username=? AND password=?");
+                ps.setString(1,user.getText());
+                ps.setString(2,new String(pass.getPassword()));
+                ResultSet rs=ps.executeQuery(); con.close();
+                msg.setText(rs.next()?"Welcome!":"Invalid credentials");
+            }catch(Exception ex){ msg.setText(ex.getMessage()); }
+        });
+        f.add(new JLabel("Username:")); f.add(user);
+        f.add(new JLabel("Password:")); f.add(pass);
+        f.add(btn); f.add(msg);
+        f.setSize(300,140); f.setVisible(true);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+}`},
+{t:"Full CRUD App (Insert+View+Delete)",c:`import javax.swing.*; import java.awt.*; import java.sql.*;
+import javax.swing.table.DefaultTableModel;
+public class CRUDApp {
+    static Connection con; static DefaultTableModel model;
+    public static void main(String[] args) throws Exception {
+        con=DriverManager.getConnection("jdbc:mysql://localhost:3306/testdb","root","password");
+        JFrame f=new JFrame("CRUD"); f.setLayout(new BorderLayout());
+        JTextField name=new JTextField(10), marks=new JTextField(5), id=new JTextField(5);
+        JButton add=new JButton("Add"), del=new JButton("Delete"), refresh=new JButton("Refresh");
+        model=new DefaultTableModel(new String[]{"ID","Name","Marks"},0);
+        JTable table=new JTable(model);
+        add.addActionListener(e->{ try{
+            PreparedStatement ps=con.prepareStatement("INSERT INTO students(name,marks) VALUES(?,?)");
+            ps.setString(1,name.getText()); ps.setInt(2,Integer.parseInt(marks.getText())); ps.executeUpdate();
+            loadData();
+        }catch(Exception ex){ex.printStackTrace();}});
+        del.addActionListener(e->{ try{
+            PreparedStatement ps=con.prepareStatement("DELETE FROM students WHERE id=?");
+            ps.setInt(1,Integer.parseInt(id.getText())); ps.executeUpdate(); loadData();
+        }catch(Exception ex){ex.printStackTrace();}});
+        refresh.addActionListener(e->{ try{ loadData(); }catch(Exception ex){ex.printStackTrace();}});
+        JPanel top=new JPanel(); top.add(new JLabel("Name:")); top.add(name);
+        top.add(new JLabel("Marks:")); top.add(marks); top.add(add);
+        top.add(new JLabel("DelID:")); top.add(id); top.add(del); top.add(refresh);
+        f.add(top,BorderLayout.NORTH); f.add(new JScrollPane(table),BorderLayout.CENTER);
+        loadData(); f.setSize(700,400); f.setVisible(true); f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    static void loadData() throws Exception {
+        model.setRowCount(0);
+        ResultSet rs=con.createStatement().executeQuery("SELECT * FROM students");
+        while(rs.next()) model.addRow(new Object[]{rs.getInt(1),rs.getString(2),rs.getInt(3)});
+    }
+}`},
+{t:"Count Records Display",c:`import javax.swing.*; import java.sql.*;
+public class CountDisplay {
+    public static void main(String[] args) throws Exception {
+        Connection con=DriverManager.getConnection(
+            "jdbc:mysql://localhost:3306/testdb","root","password");
+        ResultSet rs=con.createStatement().executeQuery("SELECT COUNT(*) FROM students");
+        rs.next(); int count=rs.getInt(1); con.close();
+        JOptionPane.showMessageDialog(null,"Total students: "+count);
+    }
+}`},
+{t:"JComboBox Populated from DB",c:`import javax.swing.*; import java.awt.*; import java.sql.*;
+public class ComboFromDB {
+    public static void main(String[] args) throws Exception {
+        JFrame f=new JFrame("Select Student");
+        JComboBox<String> cb=new JComboBox<>();
+        Connection con=DriverManager.getConnection(
+            "jdbc:mysql://localhost:3306/testdb","root","password");
+        ResultSet rs=con.createStatement().executeQuery("SELECT name FROM students");
+        while(rs.next()) cb.addItem(rs.getString("name"));
+        con.close();
+        JLabel lbl=new JLabel(""); JButton btn=new JButton("Select");
+        btn.addActionListener(e->lbl.setText("Selected: "+cb.getSelectedItem()));
+        f.setLayout(new FlowLayout()); f.add(cb); f.add(btn); f.add(lbl);
+        f.setSize(350,120); f.setVisible(true); f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+}`},
+{t:"Average Marks Display",c:`import javax.swing.*; import java.sql.*;
+public class AvgDisplay {
+    public static void main(String[] args) throws Exception {
+        Connection con=DriverManager.getConnection(
+            "jdbc:mysql://localhost:3306/testdb","root","password");
+        ResultSet rs=con.createStatement().executeQuery("SELECT AVG(marks) avg FROM students");
+        rs.next(); double avg=rs.getDouble("avg"); con.close();
+        JOptionPane.showMessageDialog(null,
+            String.format("Average Marks: %.2f",avg),"Stats",JOptionPane.INFORMATION_MESSAGE);
+    }
+}`},
+{t:"Refresh JTable with Button",c:`import javax.swing.*; import java.sql.*;
+import javax.swing.table.DefaultTableModel;
+public class RefreshTable {
+    static Connection con; static DefaultTableModel model;
+    public static void main(String[] args) throws Exception {
+        con=DriverManager.getConnection("jdbc:mysql://localhost:3306/testdb","root","password");
+        model=new DefaultTableModel(new String[]{"ID","Name","Marks"},0);
+        JFrame f=new JFrame("Auto Refresh");
+        JTable t=new JTable(model); JButton btn=new JButton("Refresh");
+        btn.addActionListener(e->{ try{ load(); }catch(Exception ex){} });
+        load();
+        f.add(new JScrollPane(t),java.awt.BorderLayout.CENTER);
+        f.add(btn,java.awt.BorderLayout.SOUTH);
+        f.setSize(400,250); f.setVisible(true); f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    static void load() throws Exception {
+        model.setRowCount(0);
+        ResultSet rs=con.createStatement().executeQuery("SELECT * FROM students");
+        while(rs.next()) model.addRow(new Object[]{rs.getInt(1),rs.getString(2),rs.getInt(3)});
+    }
+}`},
+{t:"Input Validation Before DB Insert",c:`import javax.swing.*; import java.awt.*; import java.sql.*;
+public class ValidatedInsert {
+    public static void main(String[] args) {
+        JFrame f=new JFrame("Validated Insert");
+        JTextField name=new JTextField(12), marks=new JTextField(5);
+        JButton btn=new JButton("Save"); JLabel msg=new JLabel("");
+        btn.addActionListener(e->{
+            if(name.getText().isEmpty()){ msg.setText("Name required!"); return; }
+            try{
+                int m=Integer.parseInt(marks.getText());
+                if(m<0||m>100){ msg.setText("Marks 0-100 only!"); return; }
+                Connection con=DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/testdb","root","password");
+                PreparedStatement ps=con.prepareStatement("INSERT INTO students(name,marks) VALUES(?,?)");
+                ps.setString(1,name.getText()); ps.setInt(2,m); ps.executeUpdate(); con.close();
+                msg.setText("Saved!"); name.setText(""); marks.setText("");
+            }catch(NumberFormatException ex){ msg.setText("Invalid marks!");
+            }catch(Exception ex){ msg.setText(ex.getMessage()); }
+        });
+        f.setLayout(new FlowLayout());
+        f.add(new JLabel("Name:")); f.add(name);
+        f.add(new JLabel("Marks:")); f.add(marks); f.add(btn); f.add(msg);
+        f.setSize(420,100); f.setVisible(true); f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+}`},
+{t:"Print Selected Row from JTable to DB",c:`import javax.swing.*; import java.sql.*;
+import javax.swing.table.DefaultTableModel;
+public class RowDetails {
+    public static void main(String[] args) throws Exception {
+        Connection con=DriverManager.getConnection(
+            "jdbc:mysql://localhost:3306/testdb","root","password");
+        DefaultTableModel model=new DefaultTableModel(new String[]{"ID","Name","Marks"},0);
+        ResultSet rs=con.createStatement().executeQuery("SELECT * FROM students");
+        while(rs.next()) model.addRow(new Object[]{rs.getInt(1),rs.getString(2),rs.getInt(3)});
+        con.close();
+        JTable table=new JTable(model);
+        JButton btn=new JButton("Show Selected");
+        btn.addActionListener(e->{
+            int row=table.getSelectedRow();
+            if(row>=0) JOptionPane.showMessageDialog(null,
+                "ID: "+model.getValueAt(row,0)+"\nName: "+model.getValueAt(row,1)+"\nMarks: "+model.getValueAt(row,2));
+        });
+        JFrame f=new JFrame("Row Details");
+        f.add(new JScrollPane(table),java.awt.BorderLayout.CENTER);
+        f.add(btn,java.awt.BorderLayout.SOUTH);
+        f.setSize(400,300); f.setVisible(true); f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+}`},
+{t:"Dropdown Filter DB Results",c:`import javax.swing.*; import java.awt.*; import java.sql.*;
+import javax.swing.table.DefaultTableModel;
+public class FilterCombo {
+    public static void main(String[] args) throws Exception {
+        Connection con=DriverManager.getConnection(
+            "jdbc:mysql://localhost:3306/testdb","root","password");
+        DefaultTableModel model=new DefaultTableModel(new String[]{"ID","Name","Marks"},0);
+        JComboBox<String> cb=new JComboBox<>(new String[]{"All",">80",">90"});
+        JTable table=new JTable(model);
+        cb.addActionListener(e->{ try{
+            model.setRowCount(0);
+            String q="SELECT * FROM students";
+            if(cb.getSelectedItem().equals(">80")) q+=" WHERE marks>80";
+            else if(cb.getSelectedItem().equals(">90")) q+=" WHERE marks>90";
+            ResultSet rs=con.createStatement().executeQuery(q);
+            while(rs.next()) model.addRow(new Object[]{rs.getInt(1),rs.getString(2),rs.getInt(3)});
+        }catch(Exception ex){ex.printStackTrace();}});
+        JFrame f=new JFrame("Filter"); f.setLayout(new BorderLayout());
+        f.add(cb,BorderLayout.NORTH); f.add(new JScrollPane(table),BorderLayout.CENTER);
+        f.setSize(400,300); f.setVisible(true); f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+}`},
+{t:"Record Count Label Update",c:`import javax.swing.*; import java.awt.*; import java.sql.*;
+public class LiveCount {
+    public static void main(String[] args) throws Exception {
+        JFrame f=new JFrame("Live Count");
+        JLabel lbl=new JLabel("Loading...",SwingConstants.CENTER);
+        lbl.setFont(lbl.getFont().deriveFont(24f));
+        Connection con=DriverManager.getConnection(
+            "jdbc:mysql://localhost:3306/testdb","root","password");
+        ResultSet rs=con.createStatement().executeQuery("SELECT COUNT(*) FROM students");
+        rs.next(); lbl.setText("Students in DB: "+rs.getInt(1)); con.close();
+        f.add(lbl,BorderLayout.CENTER);
+        f.setSize(300,120); f.setVisible(true); f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+}`},
+{t:"Export Table to Text File",c:`import javax.swing.*; import java.sql.*; import java.io.*;
+public class ExportToFile {
+    public static void main(String[] args) throws Exception {
+        Connection con=DriverManager.getConnection(
+            "jdbc:mysql://localhost:3306/testdb","root","password");
+        ResultSet rs=con.createStatement().executeQuery("SELECT * FROM students");
+        PrintWriter pw=new PrintWriter("students.txt");
+        pw.println("ID\tName\tMarks");
+        while(rs.next())
+            pw.println(rs.getInt(1)+"\t"+rs.getString(2)+"\t"+rs.getInt(3));
+        pw.close(); con.close();
+        JOptionPane.showMessageDialog(null,"Exported to students.txt");
+    }
+}`},
+{t:"JSpinner Marks Input + DB",c:`import javax.swing.*; import java.awt.*; import java.sql.*;
+public class SpinnerDB {
+    public static void main(String[] args) {
+        JFrame f=new JFrame("Spinner DB");
+        JTextField name=new JTextField(10);
+        JSpinner sp=new JSpinner(new SpinnerNumberModel(50,0,100,1));
+        JButton btn=new JButton("Save"); JLabel msg=new JLabel("");
+        btn.addActionListener(e->{ try{
+            Connection con=DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/testdb","root","password");
+            PreparedStatement ps=con.prepareStatement("INSERT INTO students(name,marks) VALUES(?,?)");
+            ps.setString(1,name.getText()); ps.setInt(2,(int)sp.getValue());
+            ps.executeUpdate(); con.close(); msg.setText("Saved!");
+        }catch(Exception ex){ msg.setText(ex.getMessage()); }});
+        f.setLayout(new FlowLayout());
+        f.add(new JLabel("Name:")); f.add(name); f.add(sp); f.add(btn); f.add(msg);
+        f.setSize(400,100); f.setVisible(true); f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+}`},
+{t:"DB Error Dialog Handling",c:`import javax.swing.*; import java.sql.*;
+public class DBErrorHandle {
+    public static void main(String[] args) {
+        try{
+            Connection con=DriverManager.getConnection(
+                "jdbc:mysql://localhost:9999/wrong","root","bad");
+            con.close();
+        }catch(SQLException ex){
+            JOptionPane.showMessageDialog(null,
+                "DB Error: "+ex.getMessage(),"Connection Failed",JOptionPane.ERROR_MESSAGE);
+        }
+    }
+}`},
+{t:"Top Scorer Display",c:`import javax.swing.*; import java.sql.*;
+public class TopScorer {
+    public static void main(String[] args) throws Exception {
+        Connection con=DriverManager.getConnection(
+            "jdbc:mysql://localhost:3306/testdb","root","password");
+        ResultSet rs=con.createStatement().executeQuery(
+            "SELECT name,marks FROM students ORDER BY marks DESC LIMIT 1");
+        String msg="No data";
+        if(rs.next()) msg="Top Scorer: "+rs.getString("name")+" ("+rs.getInt("marks")+" marks)";
+        con.close();
+        JOptionPane.showMessageDialog(null,msg,"🏆 Top Scorer",JOptionPane.INFORMATION_MESSAGE);
+    }
+}`},
+{t:"Student Report Card Window",c:`import javax.swing.*; import java.awt.*; import java.sql.*;
+public class ReportCard {
+    public static void main(String[] args) throws Exception {
+        Connection con=DriverManager.getConnection(
+            "jdbc:mysql://localhost:3306/testdb","root","password");
+        ResultSet rs=con.createStatement().executeQuery("SELECT * FROM students");
+        JTextArea ta=new JTextArea();
+        ta.append(String.format("%-5s %-15s %-8s %s%n","ID","Name","Marks","Grade"));
+        ta.append("-".repeat(40)+"\n");
+        while(rs.next()){
+            int m=rs.getInt("marks");
+            String g=m>=90?"A":m>=75?"B":m>=60?"C":"D";
+            ta.append(String.format("%-5d %-15s %-8d %s%n",rs.getInt("id"),rs.getString("name"),m,g));
+        }
+        con.close(); ta.setEditable(false);
+        JFrame f=new JFrame("Report Card");
+        f.add(new JScrollPane(ta));
+        f.setSize(450,300); f.setVisible(true); f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+}`}
+],
+applet:[
+{t:"Hello World Applet",c:`import java.applet.Applet;
+import java.awt.*;
+public class HelloApplet extends Applet {
+    public void paint(Graphics g) {
+        g.drawString("Hello, World!", 100, 100);
+    }
+}
+/* HTML: <applet code="HelloApplet.class" width="300" height="200"></applet> */`},
+{t:"Draw Line and Rectangle",c:`import java.applet.Applet;
+import java.awt.*;
+public class ShapeApplet extends Applet {
+    public void paint(Graphics g) {
+        g.drawLine(50,50,250,50);
+        g.drawRect(50,80,150,80);
+        g.fillOval(220,80,60,60);
+    }
+}`},
+{t:"Display Colors",c:`import java.applet.Applet;
+import java.awt.*;
+public class ColorApplet extends Applet {
+    public void paint(Graphics g) {
+        g.setColor(Color.RED);   g.fillRect(20,20,80,80);
+        g.setColor(Color.GREEN); g.fillRect(120,20,80,80);
+        g.setColor(Color.BLUE);  g.fillRect(220,20,80,80);
+    }
+}`},
+{t:"Font and Text Styling",c:`import java.applet.Applet;
+import java.awt.*;
+public class FontApplet extends Applet {
+    public void paint(Graphics g) {
+        g.setFont(new Font("Arial", Font.BOLD, 24));
+        g.setColor(Color.BLUE);
+        g.drawString("Bold Blue Text", 50, 80);
+        g.setFont(new Font("Serif", Font.ITALIC, 20));
+        g.setColor(Color.RED);
+        g.drawString("Italic Red Text", 50, 130);
+    }
+}`},
+{t:"Simple Animation (Moving Ball)",c:`import java.applet.Applet;
+import java.awt.*;
+public class BallApplet extends Applet implements Runnable {
+    int x=0,y=100; Thread t;
+    public void start(){ t=new Thread(this); t.start(); }
+    public void run(){
+        while(true){ x=(x+5)%getWidth(); repaint();
+            try{ Thread.sleep(50); }catch(Exception e){} }
+    }
+    public void paint(Graphics g){ g.setColor(Color.RED); g.fillOval(x,y,40,40); }
+}`},
+{t:"Mouse Click Drawing",c:`import java.applet.Applet;
+import java.awt.*;
+import java.awt.event.*;
+public class DrawApplet extends Applet implements MouseListener {
+    int cx=0,cy=0;
+    public void init(){ addMouseListener(this); }
+    public void paint(Graphics g){ g.fillOval(cx-10,cy-10,20,20); }
+    public void mouseClicked(MouseEvent e){ cx=e.getX(); cy=e.getY(); repaint(); }
+    public void mouseEntered(MouseEvent e){} public void mouseExited(MouseEvent e){}
+    public void mousePressed(MouseEvent e){} public void mouseReleased(MouseEvent e){}
+}`},
+{t:"Keyboard Input Display",c:`import java.applet.Applet;
+import java.awt.*;
+import java.awt.event.*;
+public class KeyApplet extends Applet implements KeyListener {
+    String msg="Press a key";
+    public void init(){ addKeyListener(this); setFocusable(true); }
+    public void paint(Graphics g){ g.drawString(msg,100,100); }
+    public void keyTyped(KeyEvent e){ msg="Key: "+e.getKeyChar(); repaint(); }
+    public void keyPressed(KeyEvent e){} public void keyReleased(KeyEvent e){}
+}`},
+{t:"Digital Clock Applet",c:`import java.applet.Applet;
+import java.awt.*;
+import java.util.*;
+public class ClockApplet extends Applet implements Runnable {
+    Thread t; String time="";
+    public void start(){ t=new Thread(this); t.start(); }
+    public void run(){
+        while(true){
+            Calendar c=Calendar.getInstance();
+            time=c.get(Calendar.HOUR_OF_DAY)+":"+c.get(Calendar.MINUTE)+":"+c.get(Calendar.SECOND);
+            repaint(); try{ Thread.sleep(1000); }catch(Exception e){}
+        }
+    }
+    public void paint(Graphics g){
+        g.setFont(new Font("Monospaced",Font.BOLD,36));
+        g.setColor(Color.DARK_GRAY);
+        g.drawString(time,60,100);
+    }
+}`},
+{t:"Applet with Parameters",c:`import java.applet.Applet;
+import java.awt.*;
+public class ParamApplet extends Applet {
+    String name;
+    public void init(){ name=getParameter("username"); }
+    public void paint(Graphics g){
+        g.setFont(new Font("Arial",Font.BOLD,20));
+        g.drawString("Welcome, "+(name!=null?name:"Guest")+"!",50,100);
+    }
+}
+/* HTML: <applet code="ParamApplet.class" width="300" height="200">
+          <param name="username" value="Alice">
+         </applet> */`},
+{t:"Traffic Light Simulation",c:`import java.applet.Applet;
+import java.awt.*;
+public class TrafficLight extends Applet implements Runnable {
+    int state=0; Thread t;
+    Color[] colors={Color.RED,Color.YELLOW,Color.GREEN};
+    public void start(){ t=new Thread(this); t.start(); }
+    public void run(){
+        while(true){ state=(state+1)%3; repaint();
+            try{ Thread.sleep(1500); }catch(Exception e){} }
+    }
+    public void paint(Graphics g){
+        g.setColor(Color.DARK_GRAY); g.fillRect(110,20,80,220);
+        Color[] c={Color.RED,Color.YELLOW,Color.GREEN};
+        for(int i=0;i<3;i++){
+            g.setColor(i==state?colors[i]:Color.GRAY);
+            g.fillOval(125,30+i*70,50,50);
+        }
+    }
+}`},
+{t:"Freehand Drawing Applet",c:`import java.applet.Applet;
+import java.awt.*;
+import java.awt.event.*;
+public class FreeDrawApplet extends Applet implements MouseMotionListener {
+    int lx=-1,ly=-1;
+    public void init(){ addMouseMotionListener(this); }
+    public void mouseDragged(MouseEvent e){
+        Graphics g=getGraphics();
+        if(lx>=0) g.drawLine(lx,ly,e.getX(),e.getY());
+        lx=e.getX(); ly=e.getY();
+    }
+    public void mouseMoved(MouseEvent e){ lx=-1; ly=-1; }
+}`},
+{t:"Calculator Applet",c:`import java.applet.Applet;
+import java.awt.*;
+import java.awt.event.*;
+public class CalcApplet extends Applet implements ActionListener {
+    TextField t1=new TextField(5),t2=new TextField(5),res=new TextField(10);
+    Button add=new Button("+"),sub=new Button("-");
+    public void init(){
+        add(t1); add(t2); add(add); add(sub); add(res);
+        add.addActionListener(this); sub.addActionListener(this);
+    }
+    public void actionPerformed(ActionEvent e){
+        double a=Double.parseDouble(t1.getText()), b=Double.parseDouble(t2.getText());
+        res.setText(e.getSource()==add?""+(a+b):""+(a-b));
+    }
+}`},
+{t:"Applet Lifecycle Demo",c:`import java.applet.Applet;
+import java.awt.*;
+public class LifecycleApplet extends Applet {
+    String status="init";
+    public void init(){ status="init() called"; }
+    public void start(){ status="start() called"; repaint(); }
+    public void stop(){ status="stop() called"; }
+    public void destroy(){ status="destroy() called"; }
+    public void paint(Graphics g){ g.drawString("Status: "+status,50,100); }
+}`},
+{t:"Smiley Face Drawing",c:`import java.applet.Applet;
+import java.awt.*;
+public class SmileyApplet extends Applet {
+    public void paint(Graphics g) {
+        g.setColor(Color.YELLOW); g.fillOval(80,40,140,140);
+        g.setColor(Color.BLACK);
+        g.fillOval(115,85,20,20);
+        g.fillOval(165,85,20,20);
+        g.drawArc(115,115,70,50,180,180);
+    }
+}`},
+{t:"Bouncing Ball Applet",c:`import java.applet.Applet;
+import java.awt.*;
+public class BounceBall extends Applet implements Runnable {
+    int x=50,y=50,dx=5,dy=5;
+    public void start(){ new Thread(this).start(); }
+    public void run(){
+        while(true){
+            x+=dx; y+=dy;
+            if(x<0||x>getWidth()-40) dx=-dx;
+            if(y<0||y>getHeight()-40) dy=-dy;
+            repaint(); try{ Thread.sleep(30); }catch(Exception e){}
+        }
+    }
+    public void paint(Graphics g){ g.setColor(Color.BLUE); g.fillOval(x,y,40,40); }
+}`},
+{t:"Checkbox in Applet",c:`import java.applet.Applet;
+import java.awt.*;
+import java.awt.event.*;
+public class CheckApplet extends Applet implements ItemListener {
+    Checkbox c1,c2; Label lbl;
+    public void init(){
+        c1=new Checkbox("Java"); c2=new Checkbox("Python"); lbl=new Label("Select:");
+        c1.addItemListener(this); c2.addItemListener(this);
+        add(c1); add(c2); add(lbl);
+    }
+    public void itemStateChanged(ItemEvent e){
+        String s="";
+        if(c1.getState()) s+="Java ";
+        if(c2.getState()) s+="Python";
+        lbl.setText("Selected: "+s);
+    }
+}`},
+{t:"Choice (Dropdown) in Applet",c:`import java.applet.Applet;
+import java.awt.*;
+import java.awt.event.*;
+public class ChoiceApplet extends Applet implements ItemListener {
+    Choice ch; Label lbl;
+    public void init(){
+        ch=new Choice(); lbl=new Label("Choose a color");
+        ch.add("Red"); ch.add("Green"); ch.add("Blue");
+        ch.addItemListener(this); add(ch); add(lbl);
+    }
+    public void itemStateChanged(ItemEvent e){ lbl.setText("Picked: "+ch.getSelectedItem()); }
+}`},
+{t:"TextField Input in Applet",c:`import java.applet.Applet;
+import java.awt.*;
+import java.awt.event.*;
+public class TFApplet extends Applet implements ActionListener {
+    TextField tf=new TextField(15); Label lbl=new Label("");
+    public void init(){
+        Button btn=new Button("Greet");
+        btn.addActionListener(this);
+        add(new Label("Your name:")); add(tf); add(btn); add(lbl);
+    }
+    public void actionPerformed(ActionEvent e){ lbl.setText("Hello, "+tf.getText()+"!"); }
+}`},
+{t:"Graphics Arc & Pie",c:`import java.applet.Applet;
+import java.awt.*;
+public class ArcApplet extends Applet {
+    public void paint(Graphics g) {
+        g.setColor(Color.RED);   g.fillArc(50,50,150,150,0,120);
+        g.setColor(Color.GREEN); g.fillArc(50,50,150,150,120,120);
+        g.setColor(Color.BLUE);  g.fillArc(50,50,150,150,240,120);
+        g.setColor(Color.BLACK); g.drawString("Pie Chart",90,230);
+    }
+}`},
+{t:"Countdown Timer Applet",c:`import java.applet.Applet;
+import java.awt.*;
+public class CountdownApplet extends Applet implements Runnable {
+    int count=10;
+    public void start(){ new Thread(this).start(); }
+    public void run(){
+        while(count>=0){ repaint();
+            try{ Thread.sleep(1000); }catch(Exception e){} count--; }
+    }
+    public void paint(Graphics g){
+        g.setFont(new Font("Monospaced",Font.BOLD,48));
+        g.setColor(count>3?Color.GREEN:Color.RED);
+        g.drawString(count>=0?""+count:"Done!",100,120);
+    }
+}`}
+],
+iface:[
+{t:"Basic Interface Implementation",c:`interface Greet {
+    void sayHello();
+}
+class English implements Greet {
+    public void sayHello(){ System.out.println("Hello!"); }
+}
+class Tamil implements Greet {
+    public void sayHello(){ System.out.println("Vanakkam!"); }
+}
+public class IfaceDemo {
+    public static void main(String[] args) {
+        Greet g1=new English(); g1.sayHello();
+        Greet g2=new Tamil();   g2.sayHello();
+    }
+}`},
+{t:"Interface with Multiple Implementations",c:`interface Shape {
+    double area();
+}
+class Circle implements Shape {
+    double r; Circle(double r){ this.r=r; }
+    public double area(){ return Math.PI*r*r; }
+}
+class Rectangle implements Shape {
+    double w,h; Rectangle(double w,double h){ this.w=w; this.h=h; }
+    public double area(){ return w*h; }
+}
+public class ShapeDemo {
+    public static void main(String[] args) {
+        Shape[] shapes={new Circle(5), new Rectangle(4,6)};
+        for(Shape s:shapes) System.out.printf("Area: %.2f%n",s.area());
+    }
+}`},
+{t:"Multiple Interface Implementation",c:`interface Flyable { void fly(); }
+interface Swimmable { void swim(); }
+class Duck implements Flyable, Swimmable {
+    public void fly(){ System.out.println("Duck is flying"); }
+    public void swim(){ System.out.println("Duck is swimming"); }
+}
+public class MultiIface {
+    public static void main(String[] args) {
+        Duck d=new Duck(); d.fly(); d.swim();
+    }
+}`},
+{t:"Interface with Constants",c:`interface Constants {
+    int MAX=100;
+    double PI=3.14159;
+    String APP="MyApp";
+}
+public class ConstantDemo implements Constants {
+    public static void main(String[] args) {
+        System.out.println("Max: "+MAX);
+        System.out.println("PI: "+PI);
+        System.out.println("App: "+APP);
+    }
+}`},
+{t:"Interface as Parameter (Polymorphism)",c:`interface Printable { void print(); }
+class Document implements Printable { public void print(){ System.out.println("Printing document"); } }
+class Photo implements Printable { public void print(){ System.out.println("Printing photo"); } }
+public class PrintDemo {
+    static void send(Printable p){ p.print(); }
+    public static void main(String[] args) {
+        send(new Document()); send(new Photo());
+    }
+}`},
+{t:"Interface Extending Interface",c:`interface Animal { void eat(); }
+interface Pet extends Animal { void play(); }
+class Dog implements Pet {
+    public void eat(){ System.out.println("Dog eats"); }
+    public void play(){ System.out.println("Dog plays"); }
+}
+public class ExtendIface {
+    public static void main(String[] args) {
+        Pet p=new Dog(); p.eat(); p.play();
+    }
+}`},
+{t:"Default Method in Interface",c:`interface Greeting {
+    void greet();
+    default void farewell(){ System.out.println("Goodbye!"); }
+}
+class FormalGreet implements Greeting {
+    public void greet(){ System.out.println("Good day, sir!"); }
+}
+public class DefaultMethod {
+    public static void main(String[] args) {
+        FormalGreet fg=new FormalGreet();
+        fg.greet(); fg.farewell();
+    }
+}`},
+{t:"Static Method in Interface",c:`interface MathOps {
+    static int square(int n){ return n*n; }
+    static int cube(int n){ return n*n*n; }
+}
+public class StaticIface {
+    public static void main(String[] args) {
+        System.out.println("Square of 5: "+MathOps.square(5));
+        System.out.println("Cube of 3: "+MathOps.cube(3));
+    }
+}`},
+{t:"Functional Interface + Lambda",c:`@FunctionalInterface
+interface Calculator { int operate(int a, int b); }
+public class LambdaDemo {
+    public static void main(String[] args) {
+        Calculator add = (a,b) -> a+b;
+        Calculator mul = (a,b) -> a*b;
+        System.out.println("Add: "+add.operate(3,4));
+        System.out.println("Mul: "+mul.operate(3,4));
+    }
+}`},
+{t:"Comparable Interface",c:`import java.util.*;
+class Student implements Comparable<Student> {
+    String name; int marks;
+    Student(String n,int m){ name=n; marks=m; }
+    public int compareTo(Student o){ return this.marks-o.marks; }
+    public String toString(){ return name+"("+marks+")"; }
+}
+public class ComparableDemo {
+    public static void main(String[] args) {
+        List<Student> list=new ArrayList<>();
+        list.add(new Student("Alice",85));
+        list.add(new Student("Bob",72));
+        list.add(new Student("Carol",91));
+        Collections.sort(list);
+        System.out.println(list);
+    }
+}`},
+{t:"Runnable Interface (Thread)",c:`public class RunnableDemo {
+    public static void main(String[] args) {
+        Runnable r = () -> {
+            for(int i=1;i<=5;i++){
+                System.out.println(Thread.currentThread().getName()+" -> "+i);
+                try{ Thread.sleep(200); }catch(Exception e){}
+            }
+        };
+        Thread t1=new Thread(r,"Thread-A");
+        Thread t2=new Thread(r,"Thread-B");
+        t1.start(); t2.start();
+    }
+}`},
+{t:"Interface with ArrayList",c:`import java.util.*;
+interface Describable { String describe(); }
+class Car implements Describable {
+    String model; int year;
+    Car(String m,int y){ model=m; year=y; }
+    public String describe(){ return model+" ("+year+")"; }
+}
+public class IfaceList {
+    public static void main(String[] args) {
+        List<Describable> items=new ArrayList<>();
+        items.add(new Car("Tesla",2023));
+        items.add(new Car("BMW",2021));
+        for(Describable d:items) System.out.println(d.describe());
+    }
+}`},
+{t:"Anonymous Class implementing Interface",c:`interface Speak { void talk(); }
+public class AnonClass {
+    public static void main(String[] args) {
+        Speak s = new Speak() {
+            public void talk(){ System.out.println("Anonymous class speaking!"); }
+        };
+        s.talk();
+    }
+}`},
+{t:"Interface Segregation Example",c:`interface Readable { void read(); }
+interface Writable { void write(); }
+class File implements Readable, Writable {
+    public void read(){ System.out.println("Reading file"); }
+    public void write(){ System.out.println("Writing file"); }
+}
+class ReadOnlyFile implements Readable {
+    public void read(){ System.out.println("Reading read-only file"); }
+}
+public class Segregation {
+    public static void main(String[] args) {
+        new File().read(); new File().write();
+        new ReadOnlyFile().read();
+    }
+}`},
+{t:"Interface with Constructor via Factory",c:`interface Animal { void speak(); }
+class Cat implements Animal { public void speak(){ System.out.println("Meow"); } }
+class Dog implements Animal { public void speak(){ System.out.println("Woof"); } }
+public class AnimalFactory {
+    static Animal create(String type){
+        if(type.equals("cat")) return new Cat();
+        return new Dog();
+    }
+    public static void main(String[] args) {
+        create("cat").speak();
+        create("dog").speak();
+    }
+}`},
+{t:"Iterable Interface",c:`import java.util.Iterator;
+class NumberRange implements Iterable<Integer> {
+    int start,end;
+    NumberRange(int s,int e){ start=s; end=e; }
+    public Iterator<Integer> iterator(){
+        return new Iterator<>(){
+            int cur=start;
+            public boolean hasNext(){ return cur<=end; }
+            public Integer next(){ return cur++; }
+        };
+    }
+}
+public class IterableDemo {
+    public static void main(String[] args) {
+        for(int n:new NumberRange(1,5)) System.out.print(n+" ");
+    }
+}`},
+{t:"Cloneable Interface",c:`class Book implements Cloneable {
+    String title; int pages;
+    Book(String t,int p){ title=t; pages=p; }
+    public Book clone() throws CloneNotSupportedException {
+        return (Book)super.clone();
+    }
+}
+public class CloneDemo {
+    public static void main(String[] args) throws Exception {
+        Book b1=new Book("Java",500);
+        Book b2=b1.clone(); b2.title="Python";
+        System.out.println(b1.title+" vs "+b2.title);
+    }
+}`},
+{t:"Serializable Interface",c:`import java.io.*;
+class Employee implements Serializable {
+    String name; int id;
+    Employee(String n,int i){ name=n; id=i; }
+}
+public class SerialDemo {
+    public static void main(String[] args) throws Exception {
+        Employee e=new Employee("Alice",101);
+        ObjectOutputStream out=new ObjectOutputStream(new FileOutputStream("emp.ser"));
+        out.writeObject(e); out.close();
+        ObjectInputStream in=new ObjectInputStream(new FileInputStream("emp.ser"));
+        Employee e2=(Employee)in.readObject(); in.close();
+        System.out.println(e2.name+" "+e2.id);
+    }
+}`},
+{t:"Predicate Functional Interface",c:`import java.util.*;
+import java.util.function.*;
+import java.util.stream.*;
+public class PredicateDemo {
+    public static void main(String[] args) {
+        List<Integer> nums=Arrays.asList(1,2,3,4,5,6,7,8,9,10);
+        Predicate<Integer> isEven = n -> n%2==0;
+        List<Integer> evens = nums.stream().filter(isEven).collect(Collectors.toList());
+        System.out.println("Evens: "+evens);
+    }
+}`},
+{t:"Interface with Enum Implementation",c:`interface Grade {
+    String getLevel();
+}
+enum LetterGrade implements Grade {
+    A{ public String getLevel(){ return "Excellent"; } },
+    B{ public String getLevel(){ return "Good"; } },
+    C{ public String getLevel(){ return "Average"; } };
+}
+public class EnumIface {
+    public static void main(String[] args) {
+        for(LetterGrade g:LetterGrade.values())
+            System.out.println(g+" -> "+g.getLevel());
+    }
+}`}
+],
+abs:[
+{t:"Basic Abstract Class",c:`abstract class Vehicle {
+    abstract void start();
+    void stop(){ System.out.println("Vehicle stopped"); }
+}
+class Car extends Vehicle {
+    public void start(){ System.out.println("Car started with key"); }
+}
+class Bike extends Vehicle {
+    public void start(){ System.out.println("Bike started with kick"); }
+}
+public class AbstractDemo {
+    public static void main(String[] args) {
+        Vehicle v1=new Car(); v1.start(); v1.stop();
+        Vehicle v2=new Bike(); v2.start();
+    }
+}`},
+{t:"Abstract Shape Hierarchy",c:`abstract class Shape {
+    String color;
+    Shape(String c){ color=c; }
+    abstract double area();
+    void display(){ System.out.printf("%s area: %.2f%n",color,area()); }
+}
+class Circle extends Shape {
+    double r; Circle(String c,double r){ super(c); this.r=r; }
+    public double area(){ return Math.PI*r*r; }
+}
+class Square extends Shape {
+    double s; Square(String c,double s){ super(c); this.s=s; }
+    public double area(){ return s*s; }
+}
+public class ShapeHierarchy {
+    public static void main(String[] args) {
+        Shape[] shapes={new Circle("Red",5),new Square("Blue",4)};
+        for(Shape s:shapes) s.display();
+    }
+}`},
+{t:"Abstract with Constructor",c:`abstract class Person {
+    String name; int age;
+    Person(String n,int a){ name=n; age=a; }
+    abstract String getRole();
+    void introduce(){ System.out.println("I am "+name+", age "+age+", role: "+getRole()); }
+}
+class Student extends Person {
+    Student(String n,int a){ super(n,a); }
+    public String getRole(){ return "Student"; }
+}
+class Teacher extends Person {
+    Teacher(String n,int a){ super(n,a); }
+    public String getRole(){ return "Teacher"; }
+}
+public class PersonDemo {
+    public static void main(String[] args) {
+        Person p1=new Student("Alice",20); p1.introduce();
+        Person p2=new Teacher("Bob",40);   p2.introduce();
+    }
+}`},
+{t:"Abstract Bank Account",c:`abstract class BankAccount {
+    double balance;
+    BankAccount(double b){ balance=b; }
+    abstract void deposit(double amt);
+    abstract void withdraw(double amt);
+    void showBalance(){ System.out.println("Balance: "+balance); }
+}
+class SavingsAccount extends BankAccount {
+    SavingsAccount(double b){ super(b); }
+    public void deposit(double amt){ balance+=amt; System.out.println("Deposited "+amt); }
+    public void withdraw(double amt){
+        if(amt<=balance){ balance-=amt; System.out.println("Withdrawn "+amt); }
+        else System.out.println("Insufficient funds");
+    }
+}
+public class BankDemo {
+    public static void main(String[] args) {
+        BankAccount acc=new SavingsAccount(1000);
+        acc.deposit(500); acc.withdraw(300); acc.showBalance();
+    }
+}`},
+{t:"Abstract Employee Salary",c:`abstract class Employee {
+    String name; double baseSalary;
+    Employee(String n,double s){ name=n; baseSalary=s; }
+    abstract double calculateSalary();
+    void printPayslip(){
+        System.out.printf("%s -> Salary: %.2f%n",name,calculateSalary());
+    }
+}
+class FullTime extends Employee {
+    FullTime(String n,double s){ super(n,s); }
+    public double calculateSalary(){ return baseSalary+baseSalary*0.2; }
+}
+class PartTime extends Employee {
+    int hours; PartTime(String n,double rate,int h){ super(n,rate); hours=h; }
+    public double calculateSalary(){ return baseSalary*hours; }
+}
+public class SalaryDemo {
+    public static void main(String[] args) {
+        Employee[] emps={new FullTime("Alice",30000),new PartTime("Bob",200,80)};
+        for(Employee e:emps) e.printPayslip();
+    }
+}`},
+{t:"Abstract Animal Sound",c:`abstract class Animal {
+    String name;
+    Animal(String n){ name=n; }
+    abstract void makeSound();
+    void info(){ System.out.println("Animal: "+name); }
+}
+class Dog extends Animal { Dog(){ super("Dog"); } public void makeSound(){ System.out.println("Woof!"); } }
+class Cat extends Animal { Cat(){ super("Cat"); } public void makeSound(){ System.out.println("Meow!"); } }
+class Cow extends Animal { Cow(){ super("Cow"); } public void makeSound(){ System.out.println("Moo!"); } }
+public class AnimalSound {
+    public static void main(String[] args) {
+        Animal[] animals={new Dog(),new Cat(),new Cow()};
+        for(Animal a:animals){ a.info(); a.makeSound(); }
+    }
+}`},
+{t:"Abstract with Interface",c:`interface Taxable { double getTax(); }
+abstract class Product {
+    String name; double price;
+    Product(String n,double p){ name=n; price=p; }
+    abstract double finalPrice();
+}
+class Electronics extends Product implements Taxable {
+    Electronics(String n,double p){ super(n,p); }
+    public double getTax(){ return price*0.18; }
+    public double finalPrice(){ return price+getTax(); }
+}
+public class AbstractInterface {
+    public static void main(String[] args) {
+        Electronics e=new Electronics("Laptop",50000);
+        System.out.printf("Final price of %s: %.2f%n",e.name,e.finalPrice());
+    }
+}`},
+{t:"Template Method Pattern",c:`abstract class DataProcessor {
+    final void process(){
+        readData(); processData(); writeData();
+    }
+    abstract void readData();
+    abstract void processData();
+    void writeData(){ System.out.println("Writing output..."); }
+}
+class CSVProcessor extends DataProcessor {
+    public void readData(){ System.out.println("Reading CSV file"); }
+    public void processData(){ System.out.println("Processing CSV data"); }
+}
+public class TemplateDemo {
+    public static void main(String[] args) { new CSVProcessor().process(); }
+}`},
+{t:"Abstract with Static Method",c:`abstract class Counter {
+    static int count=0;
+    abstract void increment();
+    static int getCount(){ return count; }
+}
+class DoubleCounter extends Counter {
+    public void increment(){ count+=2; }
+}
+class TripleCounter extends Counter {
+    public void increment(){ count+=3; }
+}
+public class CounterDemo {
+    public static void main(String[] args) {
+        Counter c1=new DoubleCounter(); c1.increment(); c1.increment();
+        Counter c2=new TripleCounter(); c2.increment();
+        System.out.println("Total count: "+Counter.getCount());
+    }
+}`},
+{t:"Abstract Collection Sort",c:`import java.util.*;
+abstract class Sorter {
+    abstract void sort(int[] arr);
+    void display(int[] arr){ System.out.println(Arrays.toString(arr)); }
+}
+class BubbleSorter extends Sorter {
+    public void sort(int[] a){
+        for(int i=0;i<a.length-1;i++)
+            for(int j=0;j<a.length-i-1;j++)
+                if(a[j]>a[j+1]){ int t=a[j]; a[j]=a[j+1]; a[j+1]=t; }
+    }
+}
+public class SortDemo {
+    public static void main(String[] args) {
+        int[] arr={64,34,25,12,22};
+        Sorter s=new BubbleSorter(); s.sort(arr); s.display(arr);
+    }
+}`},
+{t:"Abstract with Multiple Children",c:`abstract class Instrument {
+    String name; Instrument(String n){ name=n; }
+    abstract void play();
+    void info(){ System.out.println("Instrument: "+name); }
+}
+class Guitar extends Instrument { Guitar(){ super("Guitar"); } public void play(){ System.out.println("Strumming guitar"); } }
+class Piano extends Instrument { Piano(){ super("Piano"); } public void play(){ System.out.println("Playing piano keys"); } }
+class Drums extends Instrument { Drums(){ super("Drums"); } public void play(){ System.out.println("Beating drums"); } }
+public class InstrumentDemo {
+    public static void main(String[] args) {
+        Instrument[] ins={new Guitar(),new Piano(),new Drums()};
+        for(Instrument i:ins){ i.info(); i.play(); }
+    }
+}`},
+{t:"Abstract Geometry Calculator",c:`abstract class Geometry {
+    abstract double area();
+    abstract double perimeter();
+    void printAll(){
+        System.out.printf("Area: %.2f, Perimeter: %.2f%n",area(),perimeter());
+    }
+}
+class Triangle extends Geometry {
+    double a,b,c;
+    Triangle(double a,double b,double c){ this.a=a; this.b=b; this.c=c; }
+    public double perimeter(){ return a+b+c; }
+    public double area(){
+        double s=perimeter()/2;
+        return Math.sqrt(s*(s-a)*(s-b)*(s-c));
+    }
+}
+public class GeoCalc {
+    public static void main(String[] args) {
+        new Triangle(3,4,5).printAll();
+    }
+}`},
+{t:"Abstract Logger",c:`abstract class Logger {
+    abstract void log(String msg);
+    void error(String m){ log("[ERROR] "+m); }
+    void info(String m){ log("[INFO] "+m); }
+    void warn(String m){ log("[WARN] "+m); }
+}
+class ConsoleLogger extends Logger {
+    public void log(String msg){ System.out.println(msg); }
+}
+public class LoggerDemo {
+    public static void main(String[] args) {
+        Logger log=new ConsoleLogger();
+        log.info("Application started");
+        log.warn("Low memory");
+        log.error("Null pointer exception");
+    }
+}`},
+{t:"Abstract Food Order",c:`abstract class FoodItem {
+    String name; double price;
+    FoodItem(String n,double p){ name=n; price=p; }
+    abstract String category();
+    void display(){
+        System.out.printf("[%s] %s - Rs.%.2f%n",category(),name,price);
+    }
+}
+class MainCourse extends FoodItem {
+    MainCourse(String n,double p){ super(n,p); }
+    public String category(){ return "Main"; }
+}
+class Dessert extends FoodItem {
+    Dessert(String n,double p){ super(n,p); }
+    public String category(){ return "Dessert"; }
+}
+public class FoodDemo {
+    public static void main(String[] args) {
+        FoodItem[] items={new MainCourse("Biryani",180),new Dessert("Gulab Jamun",60)};
+        for(FoodItem f:items) f.display();
+    }
+}`},
+{t:"Abstract Transport",c:`abstract class Transport {
+    String from,to; double distance;
+    Transport(String f,String t,double d){ from=f; to=t; distance=d; }
+    abstract double speed();
+    double time(){ return distance/speed(); }
+    void tripInfo(){
+        System.out.printf("From %s to %s: %.1f km at %.1f km/h = %.2f hrs%n",from,to,distance,speed(),time());
+    }
+}
+class Train extends Transport {
+    Train(String f,String t,double d){ super(f,t,d); }
+    public double speed(){ return 120; }
+}
+class Flight extends Transport {
+    Flight(String f,String t,double d){ super(f,t,d); }
+    public double speed(){ return 800; }
+}
+public class TransportDemo {
+    public static void main(String[] args) {
+        new Train("Chennai","Mumbai",1300).tripInfo();
+        new Flight("Chennai","Mumbai",1300).tripInfo();
+    }
+}`},
+{t:"Abstract Stack Structure",c:`abstract class Stack {
+    int[] arr=new int[100]; int top=-1;
+    abstract void push(int n);
+    abstract int pop();
+    boolean isEmpty(){ return top==-1; }
+    int peek(){ return arr[top]; }
+}
+class BoundedStack extends Stack {
+    int limit; BoundedStack(int l){ limit=l; }
+    public void push(int n){ if(top<limit-1) arr[++top]=n; else System.out.println("Stack full"); }
+    public int pop(){ return isEmpty()?-1:arr[top--]; }
+}
+public class StackDemo {
+    public static void main(String[] args) {
+        BoundedStack s=new BoundedStack(5);
+        s.push(10); s.push(20); s.push(30);
+        System.out.println("Peek: "+s.peek());
+        System.out.println("Pop: "+s.pop());
+        System.out.println("Pop: "+s.pop());
+    }
+}`},
+{t:"Abstract Notification System",c:`abstract class Notification {
+    String recipient; String message;
+    Notification(String r,String m){ recipient=r; message=m; }
+    abstract void send();
+    void log(){ System.out.println("LOG: Sending to "+recipient); }
+}
+class EmailNotification extends Notification {
+    EmailNotification(String r,String m){ super(r,m); }
+    public void send(){ log(); System.out.println("Email to "+recipient+": "+message); }
+}
+class SMSNotification extends Notification {
+    SMSNotification(String r,String m){ super(r,m); }
+    public void send(){ log(); System.out.println("SMS to "+recipient+": "+message); }
+}
+public class NotifyDemo {
+    public static void main(String[] args) {
+        Notification[] ns={
+            new EmailNotification("alice@mail.com","Your order shipped!"),
+            new SMSNotification("+91-9876543210","OTP: 4521")
+        };
+        for(Notification n:ns) n.send();
+    }
+}`},
+{t:"Abstract with final method",c:`abstract class Game {
+    abstract void initialize();
+    abstract void startPlay();
+    abstract void endPlay();
+    final void play(){
+        initialize(); startPlay(); endPlay();
+    }
+}
+class Cricket extends Game {
+    public void initialize(){ System.out.println("Cricket: Setting up field"); }
+    public void startPlay(){ System.out.println("Cricket: Match started"); }
+    public void endPlay(){ System.out.println("Cricket: Match over"); }
+}
+public class GameDemo {
+    public static void main(String[] args) { new Cricket().play(); }
+}`},
+{t:"Abstract Converter",c:`abstract class UnitConverter {
+    abstract double convert(double value);
+    void display(double v){ System.out.printf("%.2f -> %.4f%n",v,convert(v)); }
+}
+class KmToMiles extends UnitConverter {
+    public double convert(double v){ return v*0.621371; }
+}
+class CelsiusToFahrenheit extends UnitConverter {
+    public double convert(double v){ return v*9/5+32; }
+}
+public class ConverterDemo {
+    public static void main(String[] args) {
+        new KmToMiles().display(10);
+        new CelsiusToFahrenheit().display(100);
+    }
+}`},
+{t:"Abstract Plugin System",c:`import java.util.*;
+abstract class Plugin {
+    String name; Plugin(String n){ name=n; }
+    abstract void execute();
+    void load(){ System.out.println("Loading plugin: "+name); }
+}
+class SpellCheck extends Plugin {
+    SpellCheck(){ super("SpellCheck"); }
+    public void execute(){ System.out.println("Checking spelling..."); }
+}
+class AutoSave extends Plugin {
+    AutoSave(){ super("AutoSave"); }
+    public void execute(){ System.out.println("Auto-saving file..."); }
+}
+public class PluginDemo {
+    public static void main(String[] args) {
+        List<Plugin> plugins=new ArrayList<>();
+        plugins.add(new SpellCheck()); plugins.add(new AutoSave());
+        for(Plugin p:plugins){ p.load(); p.execute(); System.out.println(); }
+    }
+}`}
+]
+};
+
+const BADGE={swing:"badge-swing",jdbc:"badge-jdbc",swjdbc:"badge-swjdbc",applet:"badge-applet",iface:"badge-iface",abs:"badge-abs"};
+const NUMS={swing:"#185FA5",jdbc:"#3B6D11",swjdbc:"#534AB7",applet:"#993C1D",iface:"#0F6E56",abs:"#854F0B"};
+const BGCOL={swing:"#E6F1FB",jdbc:"#EAF3DE",swjdbc:"#EEEDFE",applet:"#FAECE7",iface:"#E1F5EE",abs:"#FAEEDA"};
+let currentTab="swing";
+
+function buildList(section){
+    const list=document.getElementById("list-"+section);
+    const progs=DATA[section];
+    list.innerHTML="";
+    progs.forEach((p,i)=>{
+        const div=document.createElement("div");
+        div.className="prog";
+        div.innerHTML=`<div class="prog-header" onclick="toggle(this)">
+            <span class="prog-num" style="background:${BGCOL[section]};color:${NUMS[section]}">${i+1}</span>
+            <span class="prog-title">${p.t}</span>
+            <i class="ti ti-chevron-down prog-chevron" aria-hidden="true"></i>
+        </div>
+        <div class="prog-body">
+            <pre>${p.c.replace(/</g,"&lt;").replace(/>/g,"&gt;")}</pre>
+            <button class="copy-btn" onclick="copyCode(this)"><i class="ti ti-copy" aria-hidden="true"></i> Copy code</button>
+        </div>`;
+        list.appendChild(div);
+    });
+}
+
+function toggle(hdr){
+    const body=hdr.nextElementSibling;
+    const chev=hdr.querySelector(".prog-chevron");
+    body.classList.toggle("open");
+    chev.classList.toggle("open");
+}
+
+function copyCode(btn){
+    const pre=btn.previousElementSibling;
+    navigator.clipboard.writeText(pre.textContent).then(()=>{
+        btn.textContent="✓ Copied!";
+        setTimeout(()=>{ btn.innerHTML='<i class="ti ti-copy" aria-hidden="true"></i> Copy code'; },1500);
+    });
+}
+
+function showTab(id){
+    currentTab=id;
+    document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+    document.getElementById("sec-"+id).classList.add("active");
+    document.querySelectorAll(".tab").forEach(t=>{ if(t.textContent.toLowerCase().includes(id.slice(0,3))) t.classList.add("active"); });
+    document.getElementById("searchBox").value="";
+    filterProgs();
+}
+
+function filterProgs(){
+    const q=document.getElementById("searchBox").value.toLowerCase();
+    let visible=0;
+    document.querySelectorAll(".section.active .prog").forEach(p=>{
+        const title=p.querySelector(".prog-title").textContent.toLowerCase();
+        const match=title.includes(q);
+        p.style.display=match?"":"none";
+        if(match) visible++;
+    });
+    document.getElementById("countLbl").textContent=q?`${visible} matching program(s)`:
+        `${DATA[currentTab].length} programs`;
+}
+
+["swing","jdbc","swjdbc","applet","iface","abs"].forEach(s=>buildList(s));
+filterProgs();
+
+document.querySelectorAll(".tab").forEach((t,i)=>{
+    const keys=["swing","jdbc","swjdbc","applet","iface","abs"];
+    t.onclick=()=>showTab(keys[i]);
+});
+document.querySelectorAll(".tab")[0].classList.add("active");
+</script>
